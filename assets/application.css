@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- FIX: tiny right-side gap / horizontal overflow --- */
+html, body { margin: 0; padding: 0; overflow-x: clip; }
+
+/* Optional but common Shopify fix: prevent accidental overflow */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Make images truly fill containers (prevents inline gaps) */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Your styles */
+body {
+  background-color: #bed2ba;
+}
+
+h1, .heading, .logo-text {
+  font-family: 'Cinzel', sans-serif !important;
+}
+
+.text-section {
+  font-family: 'Cinzel', sans-serif;
+  color: #6a7a5a;
+}
+
+.fancyfont {
+  color: #fff;
+  font-family: 'Cinzel', sans-serif;
+  font-size: larger;
+}
+
+label, input, select, form {
+  font-family: 'Cinzel', sans-serif;
+  color: #6a7a5a;
+  font-size: 23px;
+}
+
+button {
+  background-color: #6a7a5a;
+  border-radius: 1rem;
+  padding: 1rem;
+  color: #bed2ba;
+}
+
+.navbar {
+  font-family: 'Cinzel', sans-serif;
+  color: #6a7a5a;
+  font-size: 22px;
+}
+
+.actions, h1 {
+  font-family: 'Cinzel', sans-serif;
+  color: #6a7a5a;
+  font-size: 28px;
+}
+
+h2 {
+  font-family: 'Cinzel', sans-serif;
+  color: #6a7a5a;
+  font-size: 20px;
+}
+
+h3 {
+  font-family: 'Cinzel', sans-serif;
+  color: #6a7a5a;
+  font-size: 17px;
+}
+
+/* Links */
+a {
+  font-family: 'Cinzel', sans-serif; /* FIXED: was invalid CSS before */
+  color: #6a7a5a;
+  text-decoration: none;
+}
+
+a:link {
+  color: #6a7a5a; /* unvisited link */
+}
+
+a:visited {
+  color: #6a7a5a; /* visited link */
+}
+
+a:hover {
+  color: #41563d; /* when mouse hovers */
+  text-decoration: underline;
+}
+
+a:active {
+  color: #6a7a5a; /* when clicked */
+}
+
+.product-title {
+  font-family: 'Cinzel', sans-serif;
+  color: #6a7a5a;
+  font-size: 25px;
+}
+
+p {
+  font-family: 'Cinzel', sans-serif;
+  color: #6a7a5a;
+  font-size: 19px;
+}

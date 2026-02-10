@@ -1,0 +1,140 @@
+{% section 'homepage' %}
+{% section 'navbar' %}
+
+{% paginate collection.products by 9 %}
+  <div class="collection-page-wrapper">
+    <h1 class="collection-title">{{ collection.title }}</h1>
+
+    <div class="products-grid">
+      {% for product in collection.products %}
+        <div class="product-card">
+          <a href="{{ product.url | within: collection }}" class="product-title">
+            {{ product.title }}
+          </a>
+
+          <a href="{{ product.url | within: collection }}" class="product-image-wrap">
+            <img
+              src="{{ product.featured_image | img_url: '300x' }}"
+              alt="{{ product.featured_image.alt | escape }}
+              loading="lazy"
+            >
+          </a>
+
+          {% if product.description != blank %}
+            <p>
+              {{ product.description | strip_html | truncate: 220 }}
+            </p>
+          {% endif %}
+
+          {% if product.metafields.custom.width or product.metafields.custom.height %}
+            <div class="product-dimensions">
+              {% if product.metafields.custom.width %}
+                <p><strong>WIDTH:</strong> {{ product.metafields.custom.width }}</p>
+              {% endif %}
+              {% if product.metafields.custom.height %}
+                <p><strong>HEIGHT:</strong> {{ product.metafields.custom.height }}</p>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          <h3>PRICE</h3>
+          <p class="product-price">
+            {{ product.price | money }}
+            {% unless product.available %}
+              <br>
+              <strong>Sold out</strong>
+            {% endunless %}
+          </p>
+        </div>
+      {% else %}
+        <p class="no-matches">No matches</p>
+      {% endfor %}
+    </div>
+
+    {% if paginate.pages > 1 %}
+      {{ paginate | default_pagination }}
+    {% endif %}
+  </div>
+{% endpaginate %}
+
+<style>
+  /* Make the whole page background white */
+  html,
+  body {
+    background-color: #ffffff;
+    height: 100%;
+  }
+
+  body.template-collection,
+  .collection-page-wrapper {
+    background-color: #ffffff;
+    min-height: 50vh;
+  }
+
+  /* CENTER ALL CONTENT */
+  .collection-page-wrapper {
+    padding: 1rem 1rem;
+    max-width: 90%;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  /* grid: 3 per row on desktop, 2 on tablet, 1 on mobile */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 3fr);
+    gap: 5rem;
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 900px) {
+    .products-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+      .product-card {
+    background-color: #ffffff;
+    border: 1px solid #eee;
+    padding: 1.5rem;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
+  }
+
+  @media (max-width: 600px) {
+    .products-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .product-card {
+    background-color: #ffffff;
+    border: 1px solid #eee;
+    padding: 1.5rem;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
+
+  .product-title {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    text-decoration: none;
+  }
+
+  /* Center the image */
+  .product-image-wrap img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1rem auto;
+  }
+
+  .product-dimensions p {
+    margin: 0.1rem 0;
+  }
+
+  .no-matches {
+    grid-column: 1 / -1;
+  }
+</style>

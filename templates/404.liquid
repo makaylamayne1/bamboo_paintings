@@ -1,0 +1,23 @@
+{% section 'homepage' %}
+{% section 'navbar' %}
+
+<div class="error-404-text">
+  <h1>{{ 'general.404.title' | t }}</h1>
+  <p>{{ 'general.404.subtext_html' | t }}</p>
+</div>
+<style>
+  .error-404-text{
+    text-align: center;
+    margin: 3rem auto;
+    max-width: 640px;
+  }
+
+  .error-404-text h1{
+    margin-bottom: 0.75rem;
+  }
+
+  .error-404-text p{
+    line-height: 1.6;
+    opacity: 0.85;
+  }
+</style>

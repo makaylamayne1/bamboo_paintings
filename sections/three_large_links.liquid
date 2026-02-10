@@ -1,0 +1,75 @@
+<nav class="navbar">
+  {% if section.settings.show %}
+    {% if section.settings.text != blank %}
+      <div class="message">{{ section.settings.text }}</div>
+    {% endif %}
+    {% if section.settings.twitter_url != blank %}
+      <a href="{{ section.settings.twitter_url }}" target="_blank" aria-label="Twitter">Twitter</a>
+    {% endif %}
+    {% if section.settings.tiktok_url != blank %}
+      <a href="{{ section.settings.tiktok_url }}" target="_blank" aria-label="TikTok">TikTok</a>
+    {% endif %}
+     {% if section.settings.instagram_url != blank %}
+      <a href="{{ section.settings.instagram_url }}" target="_blank" aria-label="Instagram">Instagram</a>
+    {% endif %}
+  {% endif %}
+</nav>
+
+{% stylesheet %}
+.navbar {
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin: 4;
+  padding: 1rem;
+}
+.message {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Social Links",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show",
+      "label": "Show bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Message",
+      "default": "Follow us on social media!"
+    },
+    {
+      "type": "text",
+      "id": "instagram_url",
+      "label": "Instagram URL",
+      "default": "https://www.instagram.com"
+    },
+    {
+      "type": "text",
+      "id": "twitter_url",
+      "label": "Twitter URL",
+      "default": "https://www.twitter.com"
+    },
+    {
+      "type": "text",
+      "id": "tiktok_url",
+      "label": "TikTok URL",
+      "default": "https://www.tiktok.com"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Social Links"
+    }
+  ]
+}
+{% endschema %}

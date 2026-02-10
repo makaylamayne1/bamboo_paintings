@@ -1,0 +1,555 @@
+{% section 'homepage' %}
+{% section 'navbar' %}
+
+{% assign current_variant = product.selected_or_first_available_variant %}
+{% assign featured_image = current_variant.featured_image | default: product.featured_image %}
+
+<div class="background-for-product">
+  <div class="product-page">
+    <div class="container">
+      <h1 class="product-title">{{ product.title }}</h1>
+
+      <!-- LEFT: zoomable main image + thumbnail slider -->
+      <div class="img-row">
+        <div class="media-gallery" data-gallery>
+          {% assign featured_display = featured_image | img_url: '1024x1024' %}
+          {% assign featured_full = featured_image | img_url: '2048x2048' %}
+
+          <div class="main-image-wrap" data-zoom-wrap>
+            <img
+              src="{{ featured_display }}"
+              alt="{{ featured_image.alt | escape }}"
+              id="ProductPhotoImg"
+              data-main-image
+              data-image-id="{{ featured_image.id }}"
+              data-display-src="{{ featured_display }}"
+              data-full-src="{{ featured_full }}"
+              loading="eager"
+            >
+            <div class="zoom-hint" aria-hidden="true">Click to zoom</div>
+          </div>
+
+          <div class="thumbs-bar">
+    
+
+            <div class="thumbs" data-thumbs tabindex="0" aria-label="Product images">
+              {% for image in product.images %}
+                {% assign t_display = image | img_url: '1024x1024' %}
+                {% assign t_full = image | img_url: '2048x2048' %}
+
+                <button
+                  type="button"
+                  class="thumb{% if image.id == featured_image.id %} is-active{% endif %}"
+                  data-thumb
+                  data-image-id="{{ image.id }}"
+                  data-display="{{ t_display }}"
+                  data-full="{{ t_full }}"
+                  aria-label="View image {{ forloop.index }}"
+                >
+                  <img
+                    src="{{ image | img_url: '200x200' }}"
+                    alt="{{ image.alt | escape }}"
+                    loading="lazy"
+                  >
+                </button>
+              {% endfor %}
+            </div>
+
+           
+          </div>
+
+  
+        </div>
+      </div>
+
+      <!-- RIGHT: form + description -->
+      <div class="container2">
+        <div class="product-description">
+          <p>{{ product.description }}</p>
+        </div>
+
+        <form
+          action="/cart/add"
+          method="post"
+          enctype="multipart/form-data"
+          id="AddToCartForm"
+          class="product-form"
+        >
+          <label for="productSelect">Options</label>
+          <select name="id" id="productSelect">
+            {% for variant in product.variants %}
+              {% if variant.available %}
+                <option value="{{ variant.id }}">
+                  {{ variant.title }} - {{ variant.price | money_with_currency }}
+                </option>
+              {% else %}
+                <option disabled="disabled">
+                  {{ variant.title }} - sold out
+                </option>
+              {% endif %}
+            {% endfor %}
+          </select>
+
+          <div class="product-price">
+            <label>PRICE ~ </label>
+            {{ current_variant.price | money }}
+          </div>
+
+       <div class="quantity-row">
+  <label for="Quantity">Quantity</label>
+  <input type="number" id="Quantity" name="quantity" value="1" min="1">
+</div>
+
+
+          <button type="submit" name="add" id="AddToCart">
+            Add to cart
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Easy-to-change variables */
+  :root {
+    --product-page-max-width: 1100px;
+    --product-page-padding-top: 2rem;
+    --product-page-padding-sides: 1rem;
+    --product-page-padding-bottom: 4rem;
+
+    --product-desc-bg: #f9f6f1;
+    --product-desc-border: #e0d8c8;
+
+    --add-to-cart-bg: #6a7a5a;
+    --add-to-cart-text: #bed2ba;
+
+    /* Scrollbar (description box) */
+    --scrollbar-size: 10px;
+    --scrollbar-track: rgba(224, 216, 200, 0.35);
+    --scrollbar-thumb: rgba(106, 122, 90, 0.22);
+    --scrollbar-thumb-hover: rgba(106, 122, 90, 0.34);
+
+    /* Gallery */
+    --zoom-scale: 2.2;
+    --thumb-size: 76px;
+    --thumb-gap: 0.6rem;
+  }
+
+  body{
+    background-color:white;
+  }
+  .background-for-product { background-color: #FFFFFF; }
+
+  /* Center whole block on page */
+  .product-page {
+    max-width: var(--product-page-max-width);
+    height:103vh;
+    padding:10rem;
+    margin: 0 auto;
+    padding: var(--product-page-padding-top) var(--product-page-padding-sides) var(--product-page-padding-bottom);
+    background-color:#FFFFFF;
+  }
+
+  /* 2-column grid */
+  .container {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    column-gap: 3rem;
+    row-gap: 1.5rem;
+    align-items: flex-start;
+    margin-left:-3vw;
+  }
+
+  .product-title {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin: 0 0 0.1rem;
+    font-size: 2rem;
+  }
+
+  /* LEFT COLUMN */
+  .img-row { display:block; }
+  .media-gallery { width: 100%; }
+
+  .main-image-wrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.7rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+    cursor: zoom-in;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: pan-y;
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .main-image-wrap img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transform-origin: 50% 50%;
+    transition: transform 180ms ease;
+    will-change: transform;
+  }
+
+  .main-image-wrap.is-zoomed { cursor: zoom-out; }
+  .main-image-wrap.is-zoomed img { transform: scale(var(--zoom-scale)); }
+
+  .zoom-hint {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    font-size: 0.85rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.55);
+    color: white;
+    opacity: 0.85;
+    pointer-events: none;
+  }
+  .main-image-wrap.is-zoomed .zoom-hint { opacity: 0; }
+
+
+
+  .quantity-row{
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.quantity-row label{
+  margin: 0;
+  white-space: nowrap;
+}
+
+.quantity-row input{
+  flex: 1;
+  text-align: right;
+}
+
+  .thumbs-bar {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .thumb-nav {
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 999px;
+    border: 1px solid var(--product-desc-border);
+    background: #fff;
+    cursor: pointer;
+    box-shadow: rgba(0,0,0,0.10) 0px 3px 10px;
+  }
+
+  .thumbs {
+    display: flex;
+    gap: var(--thumb-gap);
+    overflow-x: auto;
+    padding: 0.25rem 0.2rem;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+  .thumbs::-webkit-scrollbar { height: 10px; }
+  .thumbs::-webkit-scrollbar-track { background: rgba(224, 216, 200, 0.20); border-radius: 999px; }
+  .thumbs::-webkit-scrollbar-thumb { background: rgba(106, 122, 90, 0.18); border-radius: 999px; }
+
+  .thumb {
+    flex: 0 0 auto;
+    width: var(--thumb-size);
+    height: var(--thumb-size);
+    padding: 0;
+    border: 1px solid var(--product-desc-border);
+    border-radius: 0.9rem;
+    background: transparent;
+    cursor: pointer;
+    scroll-snap-align: start;
+    overflow: hidden;
+  }
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display:block;
+  }
+  .thumb.is-active {
+    outline: 2px solid var(--add-to-cart-bg);
+    outline-offset: 2px;
+  }
+
+  .thumb-slider {
+    width: 100%;
+    margin-top: 0.4rem;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(224, 216, 200, 0.35);
+  }
+  .thumb-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: rgba(106, 122, 90, 0.55);
+    border: 3px solid rgba(249, 246, 241, 0.95);
+    box-shadow: rgba(0,0,0,0.18) 0px 4px 10px;
+    cursor: pointer;
+  }
+  .thumb-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: rgba(106, 122, 90, 0.55);
+    border: 3px solid rgba(249, 246, 241, 0.95);
+    cursor: pointer;
+  }
+
+  /* RIGHT COLUMN (FIXED: no more shifting right) */
+  .container2{
+    display: flex;
+    flex-direction: column;
+    align-self: start;          /* was center-ish */
+    align-items: end;    /* was center */
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.3rem;
+    margin-bottom: 2rem;
+    width:24vw;
+  }
+
+  .product-description{
+    max-width: 100%;
+    width: 100%;                /* was 120% */
+    height: 27rem;
+    padding: 0.75rem 1rem;
+    font-size: 4rem;
+    line-height: 1.6;
+    text-align: left;
+    background-color: var(--product-desc-bg);
+    border-radius: 1rem;
+    border: 1px solid var(--product-desc-border);
+    overflow-y: auto;
+    box-sizing: border-box;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+  .product-description p { margin: 0; }
+
+  .product-description::-webkit-scrollbar { width: var(--scrollbar-size); }
+  .product-description::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 999px; }
+  .product-description::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 999px;
+    border: 3px solid rgba(249, 246, 241, 0.9);
+    background-clip: padding-box;
+  }
+  .product-description::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+    border: 3px solid rgba(249, 246, 241, 0.95);
+  }
+  .product-description::-webkit-scrollbar-corner { background: transparent; }
+
+  .product-form{
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 0.75rem;
+    max-width: 320px;
+    width: 100%;
+    margin: 0;                  /* was margin-left:auto */
+    justify-items: stretch;
+  }
+
+  /* Remove "push right" margins */
+  .product-form label,
+  .product-form select,
+  .product-form option,
+  .product-form input,
+  .product-form button,
+  .product-price{
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    text-align: left;
+  }
+
+  /* Keep only quantity number aligned right if you want */
+  .product-form input[type="number"]{ text-align:right; }
+
+  #productSelect{
+    border-radius: 1.2rem;
+    border: 1px solid var(--product-desc-border);
+    padding: 0.75rem 2.4rem 0.75rem 1rem;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, rgba(0,0,0,0.55) 50%),
+      linear-gradient(135deg, rgba(0,0,0,0.55) 50%, transparent 50%);
+    background-position:
+      calc(100% - 18px) 50%,
+      calc(100% - 12px) 50%;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    background-color: white;
+  }
+
+  .product-form select,
+  .product-form input,
+  .product-form button{
+    width: 100%;
+    background-color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 1.2rem;
+    box-sizing: border-box;
+  }
+
+  .product-price { font-weight: 600;  }
+
+  #AddToCart {
+    background-color: var(--add-to-cart-bg);
+    color: var(--add-to-cart-text);
+    border-radius: 1rem;
+    padding: 0.9rem 1rem;
+    border: none;
+    cursor: pointer;
+    text-align:center;
+  }
+  #AddToCart:hover { opacity: 0.9; }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .container { grid-template-columns: 1fr; }
+    .container2 { align-items: center; }
+    .product-description { width: 100%; text-align: center; }
+    .product-form { width: 100%; }
+    .product-form label,
+    .product-price { text-align: left; }
+  }
+</style>
+
+<script>
+  (function () {
+    function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
+    document.querySelectorAll('[data-gallery]').forEach(function (gallery) {
+      var mainWrap = gallery.querySelector('[data-zoom-wrap]');
+      var mainImg  = gallery.querySelector('[data-main-image]');
+      var thumbs   = gallery.querySelector('[data-thumbs]');
+      var slider   = gallery.querySelector('[data-thumb-slider]');
+      var btnPrev  = gallery.querySelector('[data-thumb-prev]');
+      var btnNext  = gallery.querySelector('[data-thumb-next]');
+
+      if (!mainWrap || !mainImg || !thumbs) return;
+
+      // Thumbnails -> main image
+      function setActiveThumb(imageId) {
+        gallery.querySelectorAll('[data-thumb]').forEach(function (b) {
+          b.classList.toggle('is-active', b.dataset.imageId === String(imageId));
+        });
+      }
+
+      function setMainFromThumb(btn) {
+        var display = btn.dataset.display;
+        var full = btn.dataset.full;
+        var id = btn.dataset.imageId;
+
+        mainImg.dataset.imageId = id;
+        mainImg.dataset.displaySrc = display;
+        mainImg.dataset.fullSrc = full;
+
+        mainImg.src = mainWrap.classList.contains('is-zoomed') ? full : display;
+
+        var timg = btn.querySelector('img');
+        if (timg && timg.alt) mainImg.alt = timg.alt;
+
+        setActiveThumb(id);
+      }
+
+      gallery.querySelectorAll('[data-thumb]').forEach(function (btn) {
+        btn.addEventListener('click', function () { setMainFromThumb(btn); });
+      });
+
+      // Range slider controls thumbnail scroll
+      function maxThumbScroll() {
+        return Math.max(0, thumbs.scrollWidth - thumbs.clientWidth);
+      }
+
+      function syncRangeToScroll() {
+        if (!slider) return;
+        var maxScroll = maxThumbScroll();
+        if (maxScroll <= 0) {
+          slider.value = 0;
+          slider.disabled = true;
+          return;
+        }
+        slider.disabled = false;
+        slider.value = String(clamp(Math.round((thumbs.scrollLeft / maxScroll) * 100), 0, 100));
+      }
+
+      if (slider) {
+        slider.addEventListener('input', function () {
+          var maxScroll = maxThumbScroll();
+          if (maxScroll <= 0) return;
+          thumbs.scrollLeft = (Number(slider.value) / 100) * maxScroll;
+        });
+      }
+
+      thumbs.addEventListener('scroll', function () {
+        window.requestAnimationFrame(syncRangeToScroll);
+      });
+
+      window.addEventListener('resize', syncRangeToScroll);
+      syncRangeToScroll();
+
+      function scrollThumbsBy(dir) {
+        thumbs.scrollBy({ left: dir * thumbs.clientWidth * 0.75, behavior: 'smooth' });
+      }
+      if (btnPrev) btnPrev.addEventListener('click', function () { scrollThumbsBy(-1); });
+      if (btnNext) btnNext.addEventListener('click', function () { scrollThumbsBy(1); });
+
+      // Zoom
+      function setTransformOriginFromEvent(e) {
+        var rect = mainWrap.getBoundingClientRect();
+        var x = ((e.clientX - rect.left) / rect.width) * 100;
+        var y = ((e.clientY - rect.top) / rect.height) * 100;
+        mainImg.style.transformOrigin = clamp(x, 0, 100) + '% ' + clamp(y, 0, 100) + '%';
+      }
+
+      function zoomOn() {
+        mainWrap.classList.add('is-zoomed');
+        if (mainImg.dataset.fullSrc) mainImg.src = mainImg.dataset.fullSrc;
+      }
+
+      function zoomOff() {
+        mainWrap.classList.remove('is-zoomed');
+        mainImg.style.transformOrigin = '50% 50%';
+        if (mainImg.dataset.displaySrc) mainImg.src = mainImg.dataset.displaySrc;
+      }
+
+      mainWrap.addEventListener('click', function (e) {
+        if (mainWrap.classList.contains('is-zoomed')) zoomOff();
+        else { zoomOn(); setTransformOriginFromEvent(e); }
+      });
+
+      mainWrap.addEventListener('mousemove', function (e) {
+        if (!mainWrap.classList.contains('is-zoomed')) return;
+        setTransformOriginFromEvent(e);
+      });
+
+      mainWrap.addEventListener('mouseleave', function () {
+        if (!mainWrap.classList.contains('is-zoomed')) return;
+        mainImg.style.transformOrigin = '50% 50%';
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && mainWrap.classList.contains('is-zoomed')) zoomOff();
+      });
+    });
+  })();
+</script>

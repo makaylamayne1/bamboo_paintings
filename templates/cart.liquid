@@ -1,0 +1,297 @@
+{% section 'homepage' %}
+{% section 'navbar' %}
+
+{% if cart.item_count > 0 %}
+  <h1 class="cart-title">Cart</h1>
+
+  <form action="/cart" method="post" novalidate class="cart-form">
+    <table class="cart-table">
+      <thead class="cart-thead">
+        <tr>
+          <th colspan="2">Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for item in cart.items %}
+          <tr class="cart-row">
+            <td class="cart-cell cart-cell--image">
+              <a href="{{ item.url | within: collections.all }}">
+                <img src="{{ item | img_url: 'medium' }}" alt="{{ item.title | escape }}" class="cart-img">
+              </a>
+            </td>
+
+            <td class="cart-cell cart-cell--info">
+              <a href="{{ item.url }}" class="cart-product-title">{{ item.product.title }}</a>
+              <div class="cart-variant">{{ item.variant.title }}</div>
+              <a class="cart-remove" href="/cart/change?line={{ forloop.index }}&amp;quantity=0">Remove</a>
+            </td>
+
+            <td class="cart-cell cart-cell--price" data-label="Price">
+              {{ item.price | money }}
+            </td>
+
+            <td class="cart-cell cart-cell--qty" data-label="Quantity">
+              <input
+                type="number"
+                name="updates[]"
+                id="updates_{{ item.key }}"
+                value="{{ item.quantity }}"
+                min="0"
+                class="cart-qty-input"
+                inputmode="numeric"
+              >
+            </td>
+
+            <td class="cart-cell cart-cell--total" data-label="Total">
+              {% if item.original_line_price != item.line_price %}
+                <div class="cart-strike">{{ item.original_line_price | money }}</div>
+              {% endif %}
+
+              <div class="cart-line-price">{{ item.line_price | money }}</div>
+
+              {% if item.discounts.size > 0 %}
+                <div class="cart-discounts">
+                  {% for discount in item.discounts %}
+                    <div class="cart-discount">{{ discount.title }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="cart-summary">
+      <p class="cart-subtotal">Subtotal: {{ cart.total_price | money }}</p>
+
+      <div class="cart-actions">
+        <button type="submit" name="update" class="cart-btn cart-btn--secondary">Update</button>
+        <button type="submit" name="checkout" class="cart-btn cart-btn--primary">Checkout</button>
+      </div>
+    </div>
+  </form>
+
+{% else %}
+  <h2 class="cart-title">Cart</h2>
+  <h3 class="cart-empty">Cart is empty</h3>
+{% endif %}
+
+<style>
+  body { background-color: white; }
+
+  /* Keep global img rounding but avoid breaking other theme images if possible */
+  .cart-img { border-radius: 1rem; display:block; width:100%; height:auto; }
+
+  .cart-title{
+    margin: 1rem 1rem 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* Desktop/tablet table styling */
+  .cart-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 1.25rem;
+    padding: 0 1rem;
+    box-sizing: border-box;
+  }
+
+  .cart-table th,
+  .cart-table td {
+    padding: 0.75rem 0.5rem;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .cart-row{
+    background: rgba(244, 228, 205, 0.20);
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+
+  /* Round row corners (table trick) */
+  .cart-row td:first-child { border-top-left-radius: 1rem; border-bottom-left-radius: 1rem; }
+  .cart-row td:last-child  { border-top-right-radius: 1rem; border-bottom-right-radius: 1rem; }
+
+  .cart-product-title{
+    font-weight: 600;
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+    margin-bottom: 0.2rem;
+  }
+
+  .cart-variant{
+    opacity: 0.8;
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .cart-remove{
+    display: inline-block;
+    margin-top: 0.25rem;
+    text-decoration: underline;
+    opacity: 0.85;
+  }
+
+  .cart-strike{
+    text-decoration: line-through;
+    opacity: 0.7;
+    font-size: 0.95rem;
+  }
+
+  .cart-line-price{
+    font-weight: 600;
+  }
+
+  .cart-discounts{
+    margin-top: 0.35rem;
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+
+  .cart-qty-input{
+    background-color: white;
+    padding: 0.75rem 0.75rem;
+    border-radius: 1rem;
+    text-align: center;
+    width: 5.5rem;
+    border: 1px solid rgba(0,0,0,0.12);
+    box-sizing: border-box;
+  }
+
+  .cart-summary{
+    padding: 0 1rem 1.25rem;
+    box-sizing: border-box;
+    display: grid;
+    justify-content: end;
+    gap: 0.75rem;
+  }
+
+  .cart-actions{
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+.cart-btn{
+  border: none;
+  padding: 0.75rem 1.2rem;
+  border-radius: 0.9rem;
+  cursor: pointer;
+
+  background: #6a7a5a;
+  color: white;
+
+  font-weight: 600;
+  letter-spacing: 0.04em;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.25s ease;
+}
+
+/* Hover highlight (desktop only) */
+@media (hover: hover) {
+  .cart-btn:hover{
+    transform: translateY(-3px);
+    background-color: #7f916b;
+
+    box-shadow:
+      0 8px 20px rgba(106, 122, 90, 0.35),
+      0 0 18px rgba(170, 220, 190, 0.35);
+  }
+}
+
+/* Optional: subtle press feedback */
+.cart-btn:active{
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+
+  /* ✅ MOBILE: turn table rows into stacked cards */
+  @media (max-width: 750px){
+    .cart-table{
+      border-spacing: 0 1rem;
+      padding: 0 0.75rem;
+    }
+
+    .cart-thead{
+      display: none; /* hide headers */
+    }
+
+    .cart-table,
+    .cart-table tbody,
+    .cart-table tr,
+    .cart-table td{
+      display: block;
+      width: 100%;
+    }
+
+    .cart-row{
+      padding: 0.75rem;
+      border-radius: 1rem;
+    }
+
+    .cart-row td{
+      padding: 0.45rem 0;
+      text-align: left;
+    }
+
+    .cart-cell--image{
+      display: grid;
+      place-items: center;
+      padding-bottom: 0.5rem;
+    }
+
+    .cart-img{
+      width: min(220px, 70vw);
+    }
+
+    /* label/value layout for price/qty/total */
+    .cart-cell--price,
+    .cart-cell--qty,
+    .cart-cell--total{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.35rem 0;
+      border-top: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .cart-cell--price::before,
+    .cart-cell--qty::before,
+    .cart-cell--total::before{
+      content: attr(data-label);
+      font-weight: 600;
+      opacity: 0.85;
+    }
+
+    .cart-qty-input{
+      width: 7rem;
+      padding: 0.7rem 0.8rem;
+    }
+
+    .cart-summary{
+      justify-content: stretch;
+      padding: 0 0.75rem 1.25rem;
+    }
+
+    .cart-actions{
+      justify-content: stretch;
+    }
+
+    .cart-btn{
+      width: 100%;
+    }
+  }
+</style>

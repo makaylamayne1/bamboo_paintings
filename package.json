@@ -1,0 +1,26 @@
+{
+  "name": "makayla-theme-customizations-shopify",
+  "version": "1.0.0",
+  "private": true,
+  "license": "ISC",
+  "type": "module",
+  "scripts": {
+    "start": "shopify theme dev",
+    "theme:dev": "shopify theme dev",
+    "theme:push": "shopify theme push",
+    "theme:pull": "shopify theme pull",
+    "theme:check": "shopify theme check",
+    "build": "tailwindcss -i ./assets/tailwind.css -o ./assets/tailwind.output.css",
+    "build:tailwind": "tailwindcss -i ./assets/tailwind.css -o ./assets/tailwind.output.css --watch"
+
+  },
+  "devDependencies": {
+    "@shopify/cli": "^3.0.0",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.14"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.14"
+  }
+}

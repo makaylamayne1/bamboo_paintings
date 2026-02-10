@@ -1,0 +1,282 @@
+{% comment %}
+  sections/brand-hero.liquid
+{% endcomment %}
+
+<div
+  class="brand-hero"
+  style="
+    --hero-height: {{ section.settings.hero_height | default: 120 }}px;
+    --hero-text-color: {{ section.settings.text_color | default: '#000000' }};
+    --hero-btn-bg: {{ section.settings.primary_button_color | default: '#1A73E8' }};
+    --hero-btn-text: {{ section.settings.primary_button_text_color | default: '#FFFFFF' }};
+    --hero-padding-top: {{ section.settings.hero_padding_top | default: 56 }}px;
+    --hero-padding-bottom: {{ section.settings.hero_padding_bottom | default: 32 }}px;
+
+    --img-border-size: {{ section.settings.image_border_size | default: 0 }}px;
+    --img-border-alpha: {{ section.settings.image_border_opacity | default: 100 | times: 0.01 }};
+  "
+>
+  {% if section.settings.image != blank %}
+    {{ section.settings.image
+      | image_url: width: 3000
+      | image_tag: class: 'brand-hero__image', alt: section.settings.alt_text }}
+  {% else %}
+    <div class="brand-hero__placeholder">
+      Upload a hero image in the section settings
+    </div>
+  {% endif %}
+
+  <div class="brand-hero__overlay">
+    <div class="brand-hero__content brand-hero__content--center">
+      {% if section.settings.eyebrow != blank %}
+        <p class="brand-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      <h1 class="brand-hero__heading">{{ section.settings.heading }}</h1>
+
+      {% if section.settings.subheading != blank %}
+        <div class="brand-hero__subheading">{{ section.settings.subheading }}</div>
+      {% endif %}
+
+      <div class="brand-hero__actions">
+        {% if section.settings.primary_button_label != blank and section.settings.primary_button_link != blank %}
+          <a href="{{ section.settings.primary_button_link }}" class="brand-hero__btn brand-hero__btn--primary">
+            {{ section.settings.primary_button_label }}
+          </a>
+        {% endif %}
+
+        {% if section.settings.secondary_button_label != blank and section.settings.secondary_button_link != blank %}
+          <a href="{{ section.settings.secondary_button_link }}" class="brand-hero__btn brand-hero__btn--secondary">
+            {{ section.settings.secondary_button_label }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+#shopify-section-{{ section.id }} {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* PERFECT FULL-BLEED */
+.brand-hero {
+  position: relative;
+  width: 100vw;
+  max-width: 100%;
+ 
+
+  height: var(--hero-height, 520px);
+  max-height: 80vh;
+  overflow: hidden;
+
+  background-color: #ffffff;
+  color: var(--hero-text-color, #000000);
+
+  display: flex;
+  align-items: stretch;
+  box-sizing: border-box;
+}
+
+/* ✅ Border overlay frame (does NOT shrink the image) */
+.brand-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+
+  box-shadow: inset 0 0 0 var(--img-border-size, 0px) rgba(
+    {{ section.settings.image_border_color.red }},
+    {{ section.settings.image_border_color.green }},
+    {{ section.settings.image_border_color.blue }},
+    var(--img-border-alpha, 1)
+  );
+}
+
+/* Background image fills the hero */
+.brand-hero__image,
+.brand-hero__placeholder {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+
+  box-sizing: border-box;
+}
+
+/* Placeholder */
+.brand-hero__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  color: #6b7280;
+  font-size: 1.25rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* overlay */
+.brand-hero__overlay {
+  position: relative;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.85),
+    rgba(255, 255, 255, 0.4)
+  );
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-hero__content {
+  width: 100%;
+  padding: var(--hero-padding-top) 1.5rem var(--hero-padding-bottom);
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  box-sizing: border-box;
+}
+
+.brand-hero__content--center {
+  align-items: center;
+  text-align: center;
+}
+
+.brand-hero__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+.brand-hero__heading {
+  font-size: clamp(2.3rem, 1.9vw, 2rem);
+  line-height: 1.1;
+  margin: 0;
+}
+
+.brand-hero__subheading {
+  max-width: 32rem;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: #4b5563;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.brand-hero__actions {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.brand-hero__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.6rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out,
+    background-color 0.15s ease-out, color 0.15s ease-out;
+}
+
+.brand-hero__btn--primary {
+  background-color: var(--hero-btn-bg, #1a73e8);
+  color: var(--hero-btn-text, #ffffff);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+}
+
+.brand-hero__btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+}
+
+.brand-hero__btn--secondary {
+  border: 1px solid #d1d5db;
+  color: #111827;
+  background-color: #ffffff;
+}
+
+.brand-hero__btn--secondary:hover {
+  background-color: #f9fafb;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .brand-hero {
+    height: auto;
+    min-height: 420px;
+    max-height: none;
+  }
+
+  .brand-hero__content {
+    padding: var(--hero-padding-top) 1.25rem var(--hero-padding-bottom);
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Brand hero",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Hero background image" },
+    { "type": "text", "id": "alt_text", "label": "Image alt text", "default": "Hero image" },
+
+    { "type": "range", "id": "hero_height", "label": "Hero height (px)", "min": 100,
+"max": 800,
+"step": 20,
+"default": 520
+ },
+
+    { "type": "range", "id": "hero_padding_top", "label": "Content padding top (px)", "min": 10, "max": 160, "step": 5, "default": 50},
+    { "type": "range", "id": "hero_padding_bottom", "label": "Content padding bottom (px)", "min": 10, "max": 160, "step": 5, "default": 50},
+
+    { "type": "range", "id": "content_max_width", "label": "Content max width (px)", "min": 320, "max": 1400, "step": 20, "default": 1100 },
+
+    { "type": "text", "id": "eyebrow", "label": "Small label (optional)", "default": "PAINT MADE CALM" },
+    { "type": "text", "id": "heading", "label": "Main heading", "default": "Color that makes your space feel like home." },
+    { "type": "richtext", "id": "subheading", "label": "Subheading", "default": "<p>Curated paints and finishes to keep your walls calm, clean, and beautifully you.</p>" },
+
+    { "type": "color", "id": "text_color", "label": "Heading text color", "default": "#000000" },
+
+    { "type": "text", "id": "primary_button_label", "label": "Primary button label", "default": "Shop paints" },
+    { "type": "url", "id": "primary_button_link", "label": "Primary button link" },
+    { "type": "color", "id": "primary_button_color", "label": "Primary button color", "default": "#1A73E8" },
+    { "type": "color", "id": "primary_button_text_color", "label": "Primary button text color", "default": "#FFFFFF" },
+
+    { "type": "text", "id": "secondary_button_label", "label": "Secondary button label", "default": "Learn about our studio" },
+    { "type": "url", "id": "secondary_button_link", "label": "Secondary button link" },
+
+    { "type": "header", "content": "Image border" },
+    { "type": "range", "id": "image_border_size", "label": "Border size (px)", "min": 0, "max": 40, "step": 1, "default": 0 },
+    { "type": "color", "id": "image_border_color", "label": "Border color", "default": "#f4e4cd" },
+    { "type": "range", "id": "image_border_opacity", "label": "Border opacity (%)", "min": 0, "max": 100, "step": 5, "default": 100 }
+  ],
+  "presets": [{ "name": "Brand hero" }]
+}
+{% endschema %}

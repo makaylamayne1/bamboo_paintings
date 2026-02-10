@@ -1,0 +1,145 @@
+{% section 'homepage' %}
+{% section 'navbar' %}
+<h1 class="contact-title">{{ page.title }}</h1>
+
+{% if section.settings.contact_intro %}
+  <p class="contact-intro">{{ section.settings.contact_intro }}</p>
+{% endif %}
+
+{% form 'contact' %}
+  {% if form.posted_successfully? %}
+    <p class="success-message">Thank you for your contact</p>
+  {% endif %}
+
+  {{ form.errors | default_errors }}
+
+  <div class="contact-form-wrapper">
+    <div class="contact-field">
+      <label for="ContactFormName">Name</label>
+      <input type="text" id="ContactFormName" name="contact[name]">
+    </div>
+
+    <div class="contact-field">
+      <label for="ContactFormEmail">Email</label>
+      <input type="email" id="ContactFormEmail" name="contact[email]">
+    </div>
+
+    <div class="contact-field">
+      <label for="ContactFormPhone">Phone</label>
+      <input type="tel" id="ContactFormPhone" name="contact[phone]">
+    </div>
+
+    <div class="contact-field">
+      <label for="ContactFormMessage">Message</label>
+      <textarea rows="10" id="ContactFormMessage" name="contact[body]"></textarea>
+    </div>
+
+    <input type="submit" class="contact-submit" value="Send">
+  </div>
+{% endform %}
+
+<style>
+/* Import Cinzel font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+
+/* CSS Variables - easy customization */
+:root {
+  --button-bg-color: #6A7A5A; /* default button background */
+  --button-text-color: #ffffff; /* button text color */
+  --button-hover-bg-color: #555; /* hover button background */
+  --input-bg-color: ##f9f6f1; /* input & textarea background */
+  --input-text-color: #6A7A5A; /* input & textarea text color */
+  --label-text-color: #6A7A5A; /* label color */
+  --form-bg-color: #f9f6f1; /* optional form wrapper background */
+  --intro-text-color: #6A7A5A; /* optional top paragraph color */
+}
+
+.contact-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: var(--input-text-color);
+}
+
+.contact-intro {
+  font-family: 'Cinzel', serif;
+  font-size: 1.2rem;
+  text-align: center;
+  color: var(--intro-text-color);
+  margin-bottom: 2rem;
+}
+
+.success-message {
+  font-family: 'Cinzel', serif;
+  font-size: 1.2rem;
+  color: green;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Form wrapper */
+.contact-form-wrapper {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+  background-color: var(--form-bg-color);
+  border-radius: 12px;
+}
+
+/* Fields */
+.contact-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  font-family: 'Cinzel', serif;
+}
+
+.contact-field label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--label-text-color);
+}
+
+.contact-field input,
+.contact-field textarea {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-family: 'Cinzel', serif;
+  background-color: var(--input-bg-color);
+  color: var(--input-text-color);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.contact-field input:focus,
+.contact-field textarea:focus {
+  border-color: var(--button-bg-color);
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  outline: none;
+}
+
+/* Submit button */
+.contact-submit {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  padding: 0.8rem 2rem;
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: block;
+  margin: 1rem auto 0;
+}
+
+.contact-submit:hover {
+  background-color: var(--button-hover-bg-color);
+}
+</style>

@@ -1,0 +1,126 @@
+{% comment %}
+  sections/homepage.liquid
+{% endcomment %}
+
+{% if section.settings.show %}
+  <div
+    class="outer-centering-container-top-title"
+    style="color: {{ section.settings.text_color }}; background-color: {{ section.settings.background_color }};"
+  >
+    {{ section.settings.text }}
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .outer-centering-container-top-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 120px;
+
+    font-family: 'Cinzel', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 3.2rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+
+    position: relative;
+    overflow: hidden;
+
+    animation: epicFloat 6s ease-in-out infinite, glowPulse 4s ease-in-out infinite;
+    transition: all 0.5s cubic-bezier(.22,1,.36,1);
+
+    text-shadow:
+      0 0 10px rgba(247,226,156,0.4),
+      0 0 25px rgba(247,226,156,0.3),
+      0 0 60px rgba(247,226,156,0.15);
+
+    box-shadow: 0 6px 30px rgba(0,0,0,0.4);
+  }
+
+  /* Shimmer overlay */
+  .outer-centering-container-top-title::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      120deg,
+      transparent 20%,
+      rgba(255,255,255,0.25),
+      transparent 80%
+    );
+    animation: shimmerMove 5s infinite;
+    pointer-events: none;
+  }
+
+  .outer-centering-container-top-title:hover {
+    transform: scale(1.08) rotateX(8deg);
+    letter-spacing: 0.25em;
+    text-shadow:
+      0 0 20px rgba(247,226,156,0.8),
+      0 0 60px rgba(247,226,156,0.6),
+      0 0 120px rgba(247,226,156,0.4);
+  }
+
+  @keyframes epicFloat {
+    0%   { transform: translateY(0px) scale(1); }
+    50%  { transform: translateY(-6px) scale(1.02); }
+    100% { transform: translateY(0px) scale(1); }
+  }
+
+  @keyframes glowPulse {
+    0%   { filter: drop-shadow(0 0 0px rgba(247,226,156,0.2)); }
+    50%  { filter: drop-shadow(0 0 18px rgba(247,226,156,0.6)); }
+    100% { filter: drop-shadow(0 0 0px rgba(247,226,156,0.2)); }
+  }
+
+  @keyframes shimmerMove {
+    0% { transform: translateX(-120%); }
+    100% { transform: translateX(120%); }
+  }
+
+  @media (max-width: 768px) {
+  .outer-centering-container-top-title {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    letter-spacing: 0.08em;
+    line-height: 1.3;
+
+    min-height: auto;
+    padding: 1.5rem 1.25rem;
+
+    animation: glowPulse 4s ease-in-out infinite;
+  }
+}
+
+@keyframes epicFloat {
+  0%   { transform: translateY(0px) scale(1); }
+  50%  { transform: translateY(-6px) scale(1.02); }
+  100% { transform: translateY(0px) scale(1); }
+}
+
+@keyframes glowPulse {
+  0%   { filter: drop-shadow(0 0 0px rgba(247,226,156,0.2)); }
+  50%  { filter: drop-shadow(0 0 18px rgba(247,226,156,0.6)); }
+  100% { filter: drop-shadow(0 0 0px rgba(247,226,156,0.2)); }
+}
+
+@keyframes shimmerMove {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(120%); }
+}
+  
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Text",
+  "settings": [
+    { "type": "checkbox", "id": "show", "label": "Show bar", "default": true },
+    { "type": "text", "id": "text", "label": "Message on Left", "default": "Your Website Name Here" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#f7e29c" },
+    { "type": "color", "id": "background_color", "label": "Background Header Color", "default": "#6a7a5a" }
+  ],
+  "presets": [{ "name": "text" }]
+}
+{% endschema %}

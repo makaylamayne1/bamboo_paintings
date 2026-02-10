@@ -1,0 +1,119 @@
+{% comment %}
+  sections/three_squares.liquid
+{% endcomment %}
+
+<div class="outer-centering-container">
+  <div class="square-container">
+    <div class="square">
+      <div class="text-section p-2 text-base">
+        {{ section.settings.text }}
+      </div>
+    </div>
+
+    <div class="square">
+      <div class="text-section text-4xl p-4 text-center">
+        {{ section.settings.text2 }}
+      </div>
+    </div>
+
+    <div class="square">
+      <div class="text-section p-2 text-base">
+        {{ section.settings.text3 }}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+.outer-centering-container {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 1rem;               /* keeps it off the edges */
+}
+
+
+
+.square-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 2.98rem 1px -1rem;
+
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0; /* no space at all */
+  justify-items: center;
+
+  box-sizing: border-box;
+}
+
+/* Responsive square that can shrink to fit */
+.square {
+  width: 100%;
+  max-width: 190px;              /* keeps your original size on desktop */
+  aspect-ratio: 1 / 1;           /* always a square */
+  background-color: #d7e3d7;
+
+  border: 4px solid #f4e4cd;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.square:hover {
+  transform: translateY(-6px);
+  box-shadow: 6px 8px 14px rgba(0, 0, 0, 0.3);
+}
+
+/* Prevent text from causing overflow */
+.text-section {
+  width: 100%;
+  text-align: center;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  padding: 0.25rem;
+  box-sizing: border-box;
+}
+
+/* Tablet / mobile: 2 columns, centered and equal */
+@media (max-width: 900px) {
+  .square-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .square {
+    max-width: 210px;
+  }
+}
+
+/* Small mobile: 1 column, full and centered */
+@media (max-width: 560px) {
+  .square-container {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    margin-top: 1.75rem;
+  }
+
+  .square {
+    max-width: 320px;
+    width: 100%;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Text",
+  "settings": [
+    { "type": "checkbox", "id": "show", "label": "Show bar", "default": true },
+    { "type": "text", "id": "text", "label": "Message on Left", "default": "INPUT" },
+    { "type": "text", "id": "text2", "label": "Message in Middle", "default": "INPUT" },
+    { "type": "text", "id": "text3", "label": "Message on End", "default": "INPUT" }
+  ],
+  "presets": [{ "name": "text" }]
+}
+{% endschema %}

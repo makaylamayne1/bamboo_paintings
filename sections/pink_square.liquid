@@ -1,0 +1,87 @@
+{% comment %}
+  sections/pink_square.liquid
+{% endcomment %}
+
+{% if section.settings.show %}
+  <div class="outer-centering-container">
+    <div class="homepage-square">
+      <div class="text-section">
+        {{ section.settings.text }}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+
+.outer-centering-container {
+  display: flex;
+  justify-content: center;
+  /* let the container fit the screen with some side padding */
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+/* Responsive card */
+.homepage-square {
+  width: 44vw;            /* take full width on small screens */
+
+  min-height: 190px;      /* at least as tall as your original */
+  background-color: #d7cbb2;
+
+  /* 🩷 cute warm beige border */
+  border: 6px solid #f4e4cd; /* warm beige */
+
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25);
+  margin-top: 5rem;
+  margin-bottom: 3rem;
+  box-sizing: border-box;
+  padding: 1.5rem;
+
+  /* ✨ hover animation */
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.homepage-square:hover {
+  transform: translateY(-5px);
+  box-shadow: 6px 8px 14px rgba(0, 0, 0, 0.28);
+}
+
+/* Text styling inside the box */
+.text-section {
+  font-size: 1rem;
+  line-height: 1.5;
+  text-align: center;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Optional: adjust slightly for larger screens */
+@media (min-width: 768px) {
+  .outer-centering-container {
+    padding: 0 2rem;
+    width:80%;
+  }
+
+  .text-section {
+    font-size: 1.05rem;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Text",
+  "settings": [
+    { "type": "checkbox", "id": "show", "label": "Show bar", "default": true },
+    { "type": "text", "id": "text", "label": "Explain about your brand", "default": "INPUT" }
+  ],
+  "presets": [
+    { "name": "text" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,33 @@
+{% comment %}
+sections/text.liquid
+{% endcomment %}
+
+{% if section.settings.show %}
+  <div class="text-section">
+    {{ section.settings.text }}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Text",
+  "settings": [
+    { "type": "checkbox", "id": "show", "label": "Show bar", "default": true },
+    { "type": "text", "id": "text", "label": "Message", "default": "Put your message here" }
+  ],
+  "presets": [
+    { "name": "text" }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+.text-section {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+      /* shorthand for both axes */
+  height:100%;
+  text-align: center;
+}
+{% endstylesheet %}
