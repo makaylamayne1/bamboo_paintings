@@ -7,8 +7,9 @@
   style="
     --nav-bg-color: {{ section.settings.nav_bg_color }};
     --nav-link-color: {{ section.settings.nav_link_color }};
-    --nav-hover-text: #4F6F52;   /* bamboo ink */
-    --nav-hover-bg: #DDE9D8;     /* bamboo leaf */
+    --nav-hover-text: #4F6F52;
+    --nav-hover-bg: #DDE9D8;
+    --nav-shimmer: rgba(180, 220, 190, 0.9);
   "
   role="navigation"
   aria-label="Main navigation"
@@ -34,7 +35,9 @@
 </nav>
 
 {% style %}
-/* FULL-BLEED NAVBAR */
+/* ============================= */
+/* NAVBAR LAYOUT                 */
+/* ============================= */
 .navbar {
   display: flex;
   flex-direction: column;
@@ -54,68 +57,99 @@
   background-color: var(--nav-bg-color);
 }
 
-/* LINK CONTAINER */
-.navbar .nav-link {
+/* ============================= */
+/* LINK CONTAINER                */
+/* ============================= */
+.nav-link {
   text-decoration: none !important;
-  border-radius: 9999px;
-  padding: 0.45rem 1.2rem;
   background: transparent;
-
-  transition:
-    background-color 0.25s ease,
-    box-shadow 0.25s ease;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: none;
 }
 
-/* TEXT ITSELF */
+/* ============================= */
+/* TEXT                          */
+/* ============================= */
 .nav-link-text {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
 
   color: var(--nav-link-color) !important;
+  padding: 0.2em 0.35em;
+  border-radius: 9999px;
 
-  /* 👇 starting state */
-  transform: translateY(0) scale(1);
-  text-shadow: none;
-
+  /* calm movement */
+  transform: translateY(0);
   transition:
-    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-    text-shadow 0.25s ease,
-    color 0.25s ease;
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.15s linear;
 }
 
-/* HOVER: background + POP-UP TEXT */
-@media (hover: hover) {
-  .navbar .nav-link:hover {
-    background-color: var(--nav-hover-bg);
-    box-shadow: 0 6px 14px rgba(79, 111, 82, 0.25);
-  }
+/* ============================= */
+/* INSTANT HIGHLIGHT BASE        */
+/* ============================= */
+.nav-link-text::before {
+  content: "";
+  position: absolute;
+  inset: -0.45em -0.85em;
+  background: var(--nav-hover-bg);
+  border-radius: 9999px;
+  z-index: -1;
 
-  .navbar .nav-link:hover .nav-link-text {
+  /* IMPORTANT: visible immediately */
+  opacity: 0;
+  transition: opacity 0.05s linear;
+}
+
+/* ============================= */
+/* SHIMMER LAYER                 */
+/* ============================= */
+.nav-link-text::after {
+  content: "";
+  position: absolute;
+  inset: -0.45em -0.85em;
+  border-radius: 9999px;
+  z-index: -1;
+
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    var(--nav-shimmer) 45%,
+    transparent 60%
+  );
+
+  opacity: 0;
+  transform: translateX(-30%);
+  transition:
+    opacity 0.05s linear,
+    transform 1.4s ease;
+}
+
+/* ============================= */
+/* HOVER — INSTANT + SHIMMERY    */
+/* ============================= */
+@media (hover: hover) and (pointer: fine) {
+  .nav-link-text:hover {
     color: var(--nav-hover-text) !important;
+    transform: translateY(-1.5px);
+  }
 
-    /* 👇 POP UP */
-    transform: translateY(-4px) scale(1.06);
+  .nav-link-text:hover::before {
+    opacity: 1; /* instant */
+  }
 
-    text-shadow:
-      0 4px 10px rgba(79, 111, 82, 0.35),
-      0 1px 2px rgba(0, 0, 0, 0.08);
+  .nav-link-text:hover::after {
+    opacity: 1;               /* instant */
+    transform: translateX(30%); /* slow shimmer sweep */
   }
 }
 
-/* TOUCH FEEDBACK */
-@media (hover: none) {
-  .navbar .nav-link:active {
-    background-color: var(--nav-hover-bg);
-  }
-
-  .navbar .nav-link:active .nav-link-text {
-    transform: translateY(-2px) scale(1.04);
-    color: var(--nav-hover-text) !important;
-  }
-}
-
-/* CART COUNT */
+/* ============================= */
+/* CART COUNT                    */
+/* ============================= */
 .cart-count {
   min-width: 1.3em;
   height: 1.3em;
@@ -131,7 +165,9 @@
   color: #2F3F32;
 }
 
-/* MOBILE */
+/* ============================= */
+/* MOBILE                        */
+/* ============================= */
 @media (max-width: 640px) {
   .navbar {
     padding: 1rem 0.75rem;
