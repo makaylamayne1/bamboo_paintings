@@ -1,6 +1,8 @@
 # :wave: Welcome to Makayla's Bamboo Inspired Shopify theme
 
-Please see the wiki to see what the theme looks like 
+[Demo of theme](https://vimeo.com/1163860209/148b459bc2)
+
+Please see the wiki if you just want images
 
 Theme oriented around the color green and is intended for artists who may do traditional chinese art 
 
